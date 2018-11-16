@@ -1,0 +1,30 @@
+{% extends "./base_1col.html" %}
+{% block pagecontent %}
+  <div class="article-outer">
+    <div class="container">
+      <div class="article-inner">
+          <h1>{{title if title else ''}}</h1>
+          <p>{{page_description if page_description else ''}}</p>
+          {%for level2 in menu.children %}
+          {%if loop.index == 1 or loop.index%5 == 0%}
+          <div class="row full-sidebar">
+          {%endif%}
+              <div class="col-sm-3 full-sidebar-inner">
+                <h5 class="list-header">{{level2.name}}</h5>
+                <ul class="full-sidebar-list">
+                    {%for level3 in level2.children %}
+                    <li>
+                        <a href="{{level3.abs_url}}">{{level3.name}}</a>
+                    </li>
+                    {%endfor%}
+                </ul>
+              </div>
+          {%if loop.index%4 == 0%}
+          </div>
+          {%endif%}
+          {%endfor%}
+      </div>
+    </div>
+  </div>
+{% endblock %}
+

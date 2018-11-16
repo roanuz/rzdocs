@@ -1,0 +1,31 @@
+{% extends "./base.html" %}
+{% block content %}
+<div class="full-page-header">
+	</div>
+    <div class="docs-layout-outer">
+      <div class="docs-layout-left">
+        <div class="sidebar-outer">
+          {%for item in menu.children %}
+            <div class="sidebar-inner">
+              <h5 class="list-header {{'active' if (active_section == section) else ''}}">{{item.name}}</h5>
+              <ul class="sidebar-list">
+                  {%for child in item.children %}
+                  <li>
+                      {{ web_tree(child, page, 'sidebar-listx') }}
+                      <!-- <a class="{{'active' if (child.abs_url == page.abs_url) else ''}}" href="{{child.abs_url}}">{{child.name}}</a> -->
+                  </li>
+                  {%endfor%}
+              </ul>
+            </div>
+          {%endfor%}
+        </div>
+      </div>
+      <div class="docs-layout-right">
+        <div class="docs-page">
+            {%block pagecontent%}
+            {%endblock%}
+        </div>
+      </div>
+    </div>
+{% endblock %}
+

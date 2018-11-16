@@ -1,0 +1,168 @@
+{% from "macros/common.html" import web_tree %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {% set page_title = title %}
+    {% set page_description = page_description %}
+    <title>{{page_title}}</title>
+    <meta charset="UTF-8">
+    <meta name="description" content="{{page_description}}">
+    <meta name="keywords" content="HTML,CSS,XML,JavaScript">
+    <meta name="theme-color" content="#ccc">
+    <meta name="author" content="Roanuz">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"/>
+    
+    <meta property="og:title" content="{{page_title}}" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://www.cricketapi.com/" />
+    <meta property="og:image" content="https://d2muumq9nnirye.cloudfront.net/cricketapi/images/CricketAPI_fb_share.png" />
+    
+    {%if page_description%}
+    <meta property="og:description" content="{{page_description}}" />
+    {%endif%}
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@CricketApiRz" />
+    <meta name="twitter:title" content="{{page_title}}" />
+    <meta name="twitter:description" content="{{page_description}}" />
+    
+    <link rel="icon" href="{{url_for('static', filename='images/cricketapi_fav.ico')}}" />
+    
+    <link async href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900" rel="stylesheet">
+    
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-31087175-5"></script>
+    <script>
+     window.dataLayer = window.dataLayer || [];
+     function gtag(){dataLayer.push(arguments);}
+     gtag('js', new Date());
+    
+     gtag('config', 'UA-31087175-5');
+    </script>
+    <script>
+      (function(d) {
+        var config = {
+          kitId: 'xpa8dkk',
+          scriptTimeout: 3000,
+          async: true
+        },
+        h=d.documentElement,t=setTimeout(function(){h.className=h.className.replace(/\bwf-loading\b/g,"")+" wf-inactive";},config.scriptTimeout),tk=d.createElement("script"),f=false,s=d.getElementsByTagName("script")[0],a;h.className+=" wf-loading";tk.src='https://use.typekit.net/'+config.kitId+'.js';tk.async=true;tk.onload=tk.onreadystatechange=function(){a=this.readyState;if(f||a&&a!="complete"&&a!="loaded")return;f=true;clearTimeout(t);try{Typekit.load(config)}catch(e){}};s.parentNode.insertBefore(tk,s)
+      })(document);
+    </script>
+    
+        <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/1.bootstrap.css')}}"/>
+        <script src="{{url_for('static', filename='lib/jsonTree/jsonTree.js')}}"></script>
+        <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='lib/jsonTree/jsonTree.css')}}"/>
+        <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/docs.css')}}"/>
+  </head>
+  <body class="{{active_page}}">
+    <div class="page-common-outer">
+
+        <header class="header-outer" id="header_top">
+            <div class="container">
+              <div class="row">
+                <div class="col-xs-6 col-sm-4 col-md-5">
+                  <div class="logo-holder">
+                    <a href="/" title="Cricket API">
+                      <img src="{{url_for('static', filename='images/api_logo.svg')}}" />
+                      <span class="logo-text">
+                        <span>Roanuz</span>
+                        Cricket API
+                      </span>
+                    </a>  
+                  </div>
+                </div>
+                <div class="col-xs-6 col-sm-8 col-md-7">
+                  <p class="visible-xs" style="text-align: right;">
+                    <button class="menu-toggle" id="menu_toggle">
+                      <svg class="menu-icon"><use xlink:href="#menu_icon"></use></svg>
+                      <svg class="cross-icon"><use xlink:href="#cross_icon"></use></svg>
+                    </button>
+                  </p>
+                  <div class="menu-outer" id="menu_outer">
+                    <ul class="links-list">
+                      <li class="products-link">
+                        Products
+                        <div class="menu-popup-outer">
+                          <ul class="links-list">
+                          </ul>
+                        </div>
+                      </li>
+                      <li class="{{'active' if active_page == 'get-started'}}">
+                        <a href="">
+                          Get Started
+                        </a>
+                      </li>
+          
+                      <li class="supports-link">
+                        Support
+                        <div class="menu-popup-outer">
+                          <ul class="links-list support">
+                          </ul>
+                        </div>
+                      </li>
+                      <li class="{{'active' if active_page == 'docs'}}">
+                        <a href="">
+                          Docs
+                        </a>
+                      </li>
+                      <li class="{{'active' if active_page == 'apps'}}">
+                        <a href="/apps/">
+                          My Apps
+                        </a>
+                      </li>
+                    </ul>
+                    <ul class="links-list products-list">
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </header>
+          
+          {%block content%}
+          {%endblock%}
+
+    </div>
+
+      <script src="{{url_for('static', filename='js/1.jquery.js')}}"></script>
+      <script type="text/javascript" src="{{url_for('static', filename='js/2.fontfaceobserver.js')}}"></script>
+      <script type="text/javascript" src="{{url_for('static', filename='js/3.jquery.cookie.js')}}"></script>
+      <script type="text/javascript" src="{{url_for('static', filename='js/4.owl.carousel.js')}}"></script>
+      <script type="text/javascript" src="{{url_for('static', filename='js/5.index.js')}}"></script>
+    {% block footer_script %} {% endblock %}
+    <script>
+        $('.list-header').on('click', function(){
+          var parent = $(this).parent();
+          $('.sidebar-inner.active').not(parent).each(function(){
+            $(this).removeClass('active');
+          })
+          $(this).parent().toggleClass('active');
+        });
+      
+        $(document).ready(function(){
+          $('code.json').each(function(i, el){
+            var _el = $(el);
+            var json = JSON.parse(_el.text());
+      
+            var treeEl = $('<div></div>');
+            treeEl.addClass('json-view');
+            _el.parent().after(treeEl);
+            
+            var tree = jsonTree.create(json, treeEl[0]);
+            tree.expand(function(node) {
+              return node.childNodes.length < 2 || node.label === 'phoneNumbers';
+            });
+      
+            _el.parent().hide();
+          });
+        });
+      
+      </script>
+  </body>
+</html>

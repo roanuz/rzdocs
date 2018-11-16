@@ -1,0 +1,12 @@
+{% macro web_tree(tree, active_page, ul_class='') %}
+  <a class="{{'active' if (tree.abs_url == active_page.abs_url) else ''}}" href="{{tree.abs_url}}">{{tree.name}}</a>
+  {%if tree.children%}
+  <ul class="{{ul_class}}">
+    {%for child in tree.children %}
+    <li>
+        {{web_tree(child, active_page, ul_class)}}
+    </li>
+    {%endfor%}
+  </ul>
+  {%endif%}
+{% endmacro %}
