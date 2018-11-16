@@ -1,0 +1,2 @@
+recursive-include rzdocs/templates *
+recursive-include rzdocs/static *
