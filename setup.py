@@ -20,6 +20,7 @@ setup(
     version=VERSION,
     url='http://github.com/roanuz/rzdocs',
     packages=find_packages(exclude=EXCLUDE_FROM_PACKAGES),
+    include_package_data=True,
     install_requires=[
         'markdown',
         'markdown-include',
