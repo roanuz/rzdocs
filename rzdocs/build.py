@@ -36,12 +36,16 @@ class TreeCache:
     root_tree = None
 
 
-def build_webtree_page_json(path_str):
+def build_webtree_page_json(path_str, base_path):
+    if isinstance(base_path, str):
+        base_path = Path(base_path)
+
     if TreeCache.root_tree is None:
-        with open('_tree.json') as file:
+        tree_path = base_path / '_tree.json'
+        with open(tree_path) as file:
             TreeCache.root_tree = WebTree.from_json(json.load(file))
 
-    path = Path(path_str)
+    path = base_path / Path(path_str)
     abs_url = path_str
     if abs_url:
         abs_url = '/{}/'.format(abs_url)
