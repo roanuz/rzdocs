@@ -5,7 +5,7 @@
       <div class="article-inner">
           <h1>{{title if title else ''}}</h1>
           <p>{{page_description if page_description else ''}}</p>
-          {%for level2 in menu.children %}
+          {%for level2 in webtree.children %}
           {%if loop.index == 1 or loop.index%5 == 0%}
           <div class="row full-sidebar">
           {%endif%}

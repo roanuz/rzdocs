@@ -32,12 +32,16 @@ class WebTree:
             child.print_tree()
 
     def to_dict(self):
-        return asdict(self)
+        res = asdict(self)
+        res['file_path'] = str(self.file_path)
+        res['children'] = [c.to_dict() for c in self.children]
+        return res
+
 
     def index_webpage(self):
         return WebPage(title=None, desc=None, content='', visible_to=None)
 
-    def find_page(self, abs_url):
+    def find_child(self, abs_url):
         if not abs_url:
             abs_url = '/'
 
@@ -45,7 +49,7 @@ class WebTree:
             return self
         else:
             for child in self.children:
-                page = child.find_page(abs_url)
+                page = child.find_child(abs_url)
                 if page is not None:
                     return page
 
@@ -55,7 +59,7 @@ class WebTree:
         if self.use_as_menu:
             return self
         if self.parent_abs_url:
-            parent = root_webtree.find_page(self.parent_abs_url)
+            parent = root_webtree.find_child(self.parent_abs_url)
             if parent is None or parent.use_as_menu:
                 return parent
             else:
@@ -139,6 +143,22 @@ class WebTree:
             self.children.extend(new_children)
 
     @classmethod
+    def from_json(cls, raw):
+        updated_raw = dict()
+        updated_raw.update(raw)
+        children = raw['children']
+
+        updated_raw['file_path'] = Path(raw['file_path'])
+        updated_raw['children'] = []
+
+        tree = WebTree(**updated_raw)
+        for child_raw in children:
+            child = WebTree.from_json(child_raw)
+            tree.children.append(child)
+
+        return tree
+
+    @classmethod
     def from_dict(cls, raw, parent=None, use_as_menu=None):
         if isinstance(raw, str):
             path = raw
@@ -218,6 +238,34 @@ class WebPage:
     updated_date: str = None
     template: str = None
 
+    def merge_create(self, root_webtree, webtree, child, template=None):
+        if template is None:
+            template = 'index.html'
+
+        desc = self.desc
+        if desc is None and child.meta:
+            desc = child.meta.get('desc', None)
+
+        title = child.name if self.title is None else self.title
+        visible_to = child.visible_to if self.visible_to is None else self.visible_to
+
+        if self.template:
+            template = self.template
+        elif child.template:
+            template = child.template
+        elif webtree.default_template and (not child.is_index_page):
+            template = webtree.default_template
+
+        if not template.endswith('.html'):
+            template = template + '.html'
+
+        webpage = WebPage(
+            title=title, desc=desc, content=self.content,
+            visible_to=visible_to, updated_date=self.updated_date,
+            template=template)
+
+        return webpage
+
     @classmethod
     def from_meta(cls, raw, content=None):
         title = raw.get('title', [None])[0]
@@ -230,3 +278,18 @@ class WebPage:
             title=title, desc=desc, content=content,
             visible_to=visible_to, updated_date=updated_date,
             template=template)
+
+    @classmethod
+    def from_json(cls, raw):
+        return WebPage(**raw)
+
+    def to_dict(self):
+        return asdict(self)
+
+@dataclass
+class WebTreeAndPageResponse:
+    root: WebTree
+    tree: WebTree
+    child: WebTree
+    webpage: WebPage
+    error: tuple = field(default_factory=tuple)

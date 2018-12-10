@@ -1,6 +1,7 @@
 from pathlib import Path
-from .page import WebTree, WebPage
+from .page import WebTree, WebPage, WebTreeAndPageResponse
 import yaml
+import json
 import markdown
 import shutil
 
@@ -31,8 +32,49 @@ def build_root_webtree():
     return WebTree.from_dict(raw, use_as_menu=True)
 
 
-def build_menu(path_str):
-    webtree = build_root_webtree()
+class TreeCache:
+    root_tree = None
+
+
+def build_webtree_page_json(path_str):
+    if TreeCache.root_tree is None:
+        with open('_tree.json') as file:
+            TreeCache.root_tree = WebTree.from_json(json.load(file))
+
+    path = Path(path_str)
+    abs_url = path_str
+    if abs_url:
+        abs_url = '/{}/'.format(abs_url)
+
+    root_webtree = TreeCache.root_tree
+    webtree = None
+    webpage = None
+    child = root_webtree.find_child(abs_url)
+    error = None
+
+    if child is not None:
+        parent = child.find_menu(root_webtree)
+        if parent is not None:
+            webtree = parent
+
+        if path.exists() and path.is_dir():
+            path = path / 'index'
+
+        with open(path.with_suffix('.json')) as file:
+            webpage = WebPage.from_json(json.load(file))
+
+    else:
+        error = ("Not found", 404)
+
+    return WebTreeAndPageResponse(root_webtree, webtree, child, webpage, error)
+
+
+def build_webtree_page(path_str, root_webtree=None):
+    if root_webtree is None:
+        root_webtree = build_root_webtree()
+    webtree = None
+    webpage = None
+    error = None
 
     path = Path(path_str)
 
@@ -40,19 +82,37 @@ def build_menu(path_str):
     if abs_url:
         abs_url = '/{}/'.format(abs_url)
 
-    page = webtree.find_page(abs_url)
+    child = root_webtree.find_child(abs_url)
 
-    if page is None and path.exists():
+    if child is None and path.exists():
         if path.is_dir():
             raw = path_str
         else:
             raw = str(path.parents[0])
 
         webtree = WebTree.from_dict(raw)
-        page = webtree.find_page(abs_url)
+        child = webtree.find_child(abs_url)
 
-    parent = page.find_menu(webtree)
-    return webtree if parent is None else parent, page
+    if webtree is None:
+        webtree = root_webtree
+
+    parent = child.find_menu(webtree)
+    if parent is not None:
+        webtree = parent
+    
+    if child is not None:
+        template = '2col.html'
+
+        if child.use_auto_index and child.is_index_page:
+            webpage = child.index_webpage()
+            template = 'index.html'
+        else:
+            webpage, error = generate_html(child.file_path)
+
+        if error is None:
+            webpage = webpage.merge_create(root_webtree, webtree, child, template)
+
+    return WebTreeAndPageResponse(root_webtree, webtree, child, webpage, error)
 
 
 def generate_html(path):
@@ -67,14 +127,14 @@ def generate_html(path):
     # print("Md file", mdfile)
 
     if (not mdfile.exists()):
-        return "Not found", 404
+        return None, ("Not found", 404)
 
     md = get_md_class()
     content = md.convert(mdfile.read_text())
     meta = md.Meta
     page = WebPage.from_meta(meta, content)
     md.reset()
-    return page
+    return page, None
 
 
 def generate(src, output, media=None):
