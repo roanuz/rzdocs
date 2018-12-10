@@ -37,7 +37,6 @@ class WebTree:
         res['children'] = [c.to_dict() for c in self.children]
         return res
 
-
     def index_webpage(self):
         return WebPage(title=None, desc=None, content='', visible_to=None)
 
@@ -285,6 +284,7 @@ class WebPage:
 
     def to_dict(self):
         return asdict(self)
+
 
 @dataclass
 class WebTreeAndPageResponse:

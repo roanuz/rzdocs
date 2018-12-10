@@ -1,10 +1,10 @@
 import os
-import click
-from flask import Flask, render_template, Blueprint, send_from_directory, g
-from .build import generate_html, build_webtree_page_json
+from flask import Flask, render_template, Blueprint, send_from_directory
+from .build import build_webtree_page_json
 
 app_path = path = os.path.dirname(os.path.abspath(__file__))
 app = Flask('rzdocs_preview', static_url_path='/_static', root_path=app_path)
+
 
 @app.before_first_request
 def app_init():

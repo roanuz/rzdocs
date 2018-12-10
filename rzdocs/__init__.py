@@ -4,7 +4,7 @@ from .build_html import run_build
 import click
 
 
-__version__ = '1.0.0.3'
+__version__ = '1.0.0.4'
 
 
 @click.group()

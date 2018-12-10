@@ -111,3 +111,4 @@ cricketapi/static/min/*
 cricketapi/static/images/for_refer/*
 cricketapi/templates/partials/_planimages.svg
 package-lock.json
+.vscode/settings.json

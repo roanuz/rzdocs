@@ -99,7 +99,7 @@ def build_webtree_page(path_str, root_webtree=None):
     parent = child.find_menu(webtree)
     if parent is not None:
         webtree = parent
-    
+
     if child is not None:
         template = '2col.html'
 
