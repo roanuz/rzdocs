@@ -29,7 +29,7 @@ def render_doc_from_html(path):
     )
 
 
-def render_doc_from_json(path, base_path):
+def render_doc_from_json(path, base_path, template_base_path=None, context=None):
     if path.startswith('.') or path.startswith('/'):
         return "Invalid path", 403
 
@@ -42,8 +42,15 @@ def render_doc_from_json(path, base_path):
     if (tree_page.webpage is None):
         return "Page not Found!", 404
 
+    if context is None:
+        context = {}
+
+    template = tree_page.webpage.template
+    if template_base_path is not None:
+        template = template_base_path + '/' + template
+
     return render_template(
-        tree_page.webpage.template,
+        template,
         tree_page=tree_page,
 
         webtree=tree_page.tree,
@@ -52,5 +59,6 @@ def render_doc_from_json(path, base_path):
 
         page_content=tree_page.webpage.content,
         title=tree_page.webpage.title,
-        page_description=tree_page.webpage.desc
+        page_description=tree_page.webpage.desc,
+        **context
     )
