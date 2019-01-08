@@ -106,6 +106,8 @@ def build_page(config, path, root_tree):
     if config.base_url:
         content = re.sub(r'href=\"\/', 'href="' + config.base_url, content)
 
+    page_json['content'] = content
+
     json_path = Path(config.dist_folder) / tree_page.child.abs_url[1:]
 
     if tree_page.child.is_index_page:
