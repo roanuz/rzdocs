@@ -254,6 +254,14 @@ class WebPage:
             template = child.template
         elif webtree.default_template and (not child.is_index_page):
             template = webtree.default_template
+        if self.title is not None:
+            child.meta['snippet_title'] = self.title
+        else:
+            child.meta['snippet_title'] = child.name
+        if self.desc is not None:
+            child.meta['snippet_description'] = self.desc
+        else:
+            child.meta['snippet_description'] = ""
 
         if not template.endswith('.html'):
             template = template + '.html'
