@@ -127,9 +127,22 @@
           
           {%block content%}
           {%endblock%}
-
+​
+          <div class="outer-image-block modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                  <img src="" alt="Fantasy Variation reference image">
+                </div>
+              </div>
+            </div>
+          </div>
+​
     </div>
-
+​
       <script src="{{url_for('static', filename='js/1.jquery.js')}}"></script>
       <script type="text/javascript" src="{{url_for('static', filename='js/2.fontfaceobserver.js')}}"></script>
       <script type="text/javascript" src="{{url_for('static', filename='js/3.jquery.cookie.js')}}"></script>
@@ -144,7 +157,22 @@
           })
           $(this).parent().toggleClass('active');
         });
+        
       
+        $('.custom-id a').click(function (e) {
+          event.preventDefault();
+          var target = $(this).attr('href');
+          $('#myModal img').attr("src", target);
+          $('#myModal').addClass('in')
+          $('#myModal').css("display", "block")
+          $('body').addClass('modal-open')
+        })
+​
+        $('.outer-image-block .close').click(function (e) {
+          $('#myModal').removeClass('in')
+          $('#myModal').css("display", "none")
+          $('body').removeClass('modal-open')
+        })
         $(document).ready(function(){
           $('code.json').each(function(i, el){
             var _el = $(el);
