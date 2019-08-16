@@ -127,8 +127,7 @@
           
           {%block content%}
           {%endblock%}
-​
-          <div class="outer-image-block modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+          <div class="outer-image-block modal fade new" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
@@ -140,7 +139,6 @@
               </div>
             </div>
           </div>
-​
     </div>
 ​
       <script src="{{url_for('static', filename='js/1.jquery.js')}}"></script>
@@ -150,6 +148,7 @@
       <script type="text/javascript" src="{{url_for('static', filename='js/5.index.js')}}"></script>
     {% block footer_script %} {% endblock %}
     <script>
+      console.log('hai');
         $('.list-header').on('click', function(){
           var parent = $(this).parent();
           $('.sidebar-inner.active').not(parent).each(function(){
@@ -160,18 +159,18 @@
         
       
         $('.custom-id a').click(function (e) {
-          event.preventDefault();
+          e.preventDefault();
           var target = $(this).attr('href');
           $('#myModal img').attr("src", target);
-          $('#myModal').addClass('in')
-          $('#myModal').css("display", "block")
-          $('body').addClass('modal-open')
+          $('#myModal').addClass('in');
+          $('#myModal').css("display", "block");
+          $('body').addClass('modal-open');
         })
-​
-        $('.outer-image-block .close').click(function (e) {
-          $('#myModal').removeClass('in')
-          $('#myModal').css("display", "none")
-          $('body').removeClass('modal-open')
+        $(".outer-image-block .close").click(function (){
+          console.log('noproblem')
+          $('#myModal').removeClass('in');
+          $('#myModal').css("display", "none");
+          $('body').removeClass('modal-open');
         })
         $(document).ready(function(){
           $('code.json').each(function(i, el){
